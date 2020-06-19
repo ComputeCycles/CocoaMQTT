@@ -369,15 +369,15 @@ public class CocoaMQTT: NSObject, CocoaMQTTClient {
         socket.setDelegate(self, delegateQueue: delegateQueue)
         reader = CocoaMQTTReader(socket: socket, delegate: self)
         do {
+            delegateQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.connState = .connecting
+            }
+            
             if timeout > 0 {
                 try socket.connect(toHost: self.host, onPort: self.port, withTimeout: timeout)
             } else {
                 try socket.connect(toHost: self.host, onPort: self.port)
-            }
-            
-            delegateQueue.async { [weak self] in
-                guard let self = self else { return }
-                self.connState = .connecting
             }
             
             return .success(())
