@@ -113,8 +113,8 @@ protocol CocoaMQTTClient {
 
     /* CONNNEC/DISCONNECT */
     
-    func connect() -> Bool
-    func connect(timeout:TimeInterval) -> Bool
+    func connect() -> Result<Void, NSError>
+    func connect(timeout:TimeInterval) -> Result<Void, NSError>
     func disconnect()
     func ping()
     
@@ -355,7 +355,7 @@ public class CocoaMQTT: NSObject, CocoaMQTTClient {
     /// - Returns:
     ///   - Bool: It indicates whether successfully calling socket connect function.
     ///           Not yet established correct MQTT session
-    public func connect() -> Bool {
+    public func connect() -> Result<Void, NSError> {
         return connect(timeout: -1)
     }
     
