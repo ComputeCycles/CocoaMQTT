@@ -365,7 +365,7 @@ public class CocoaMQTT: NSObject, CocoaMQTTClient {
     /// - Returns:
     ///   - Bool: It indicates whether successfully calling socket connect function.
     ///           Not yet established correct MQTT session
-    public func connect(timeout: TimeInterval) -> Bool {
+    public func connect(timeout: TimeInterval) -> Result<Void, NSError> {
         socket.setDelegate(self, delegateQueue: delegateQueue)
         reader = CocoaMQTTReader(socket: socket, delegate: self)
         do {
@@ -380,10 +380,10 @@ public class CocoaMQTT: NSObject, CocoaMQTTClient {
                 self.connState = .connecting
             }
             
-            return true
+            return .success(())
         } catch let error as NSError {
             printError("socket connect error: \(error.description)")
-            return false
+            return .failure(error)
         }
     }
     
